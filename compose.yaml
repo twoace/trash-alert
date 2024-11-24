@@ -1,0 +1,12 @@
+services:
+  trash-alert:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      - ENV=production
+    env_file:
+      - .env
+    volumes:
+      - ./app:/app
+    restart: unless-stopped

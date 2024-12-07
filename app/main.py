@@ -10,7 +10,7 @@ def main():
     hue_connection = HueBridgeConnection(config.HUE_BRIDGE_IP)
 
     while True:
-        already_waited = False
+        iteration_start_time = time.time()
         try:
             # Lade Kalenderereignisse
             events = fetch_calendar_events(
@@ -21,7 +21,7 @@ def main():
             )
 
             # Aktuelle Zeit
-            local_tz = pytz.timezone("Europe/Berlin")
+            local_tz = pytz.timezone(config.TZ)
             now = datetime.now(local_tz)
 
             # Ereignis prüfen, ob es im gewünschten Zeitfenster liegt
@@ -29,21 +29,21 @@ def main():
             for event in events:
                 # Parse des Ereignisses in ein Python-Datetime-Objekt
                 event_title = event.get("title")
-                start_time = event.get("start")
+                iteration_start_time = event.get("start")
                 end_time = event.get("end")
 
                 # Überspringen, wenn Zeiten fehlen
-                if not start_time or not end_time:
+                if not iteration_start_time or not end_time:
                     logger.warn("Keine Start und/oder Endzeit im Ereignis! Überspringe zum nächsten Ereignis...")
                     continue
 
                 # Zeitfenster: 12 Stunden vor Start bis Ende des Ereignisses
-                light_start = start_time - timedelta(hours=12)
+                light_start = iteration_start_time - timedelta(hours=12)
                 light_end = end_time
 
                 # Prüfen, ob die aktuelle Zeit im Zeitfenster liegt
                 if light_start <= now <= light_end:
-                    color = map_title_to_color(event_title)
+                    color = map_title_to_color(event_title, config.TITLE_COLOR_MAPPING)
                     active_colors.append(color)
 
             if active_colors:
@@ -51,14 +51,14 @@ def main():
 
                 if len(active_colors) == 1:
                     # Nur eine Farbe
-                    hue_connection.set_hue_color(config.LIGHT_NAME, active_colors[0])
+                    hue_connection.set_hue_color(config.LIGHT_NAME, active_colors[0], config.BRIGHTNESS)
                 else:
                     logger.info(f"Mehrere Farben: Cycle-Modus.")
                     color_cycle = cycle(active_colors)
                     current_color = next(color_cycle)
 
-                    # Leuchtet für die nächsten 5 Minuten
-                    for _ in range(60):  # 60 * 5 Sekunden = 5 Minuten
+                    # Leuchtet für die nächsten x Minuten
+                    for _ in range(60):
                         next_color = next(color_cycle)
                         hue_connection.transition_lights(
                             light_name=config.LIGHT_NAME,
@@ -69,18 +69,22 @@ def main():
                             stay_time=5
                         )
                         current_color = next_color
-                    already_waited = True
             else:
                 # Wenn kein relevantes Ereignis gefunden wurde, schalte die Lampe aus
-                hue_connection.set_hue_color(config.LIGHT_NAME, None)  # Lampe ausschalten
+                hue_connection.set_hue_color(config.LIGHT_NAME, None, config.BRIGHTNESS)  # Lampe ausschalten
                 logger.info("Kein passendes Ereignis gefunden. Lampe ausgeschaltet.")
 
         except Exception as e:
             logger.error(f"Fehler beim Verarbeiten der Ereignisse: {e}")
 
-        if not already_waited:
-            # Warte 5 Minuten bis zur nächsten Abfrage
-            time.sleep(5 * 60)
+        # Warte bis zur nächsten Abfrage
+        elapsed_time = time.time() - iteration_start_time
+        sleep_time = max(0, (config.CALENDAR_CHECK_INTERVAL * 60) - elapsed_time)
+        # Minuten und Sekunden berechnen
+        sleep_minutes = int(sleep_time // 60)
+        sleep_seconds = int(sleep_time % 60)
+        logger.info(f"Warte bis zur nächsten Kalender Abfrage: {sleep_minutes} Minuten und {sleep_seconds} Sekunden.")
+        time.sleep(sleep_time)
 
 
 if __name__ == "__main__":

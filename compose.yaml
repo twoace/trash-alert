@@ -4,7 +4,7 @@ services:
       context: .
       dockerfile: Dockerfile
     environment:
-      - ENV=production
+      - TZ=${TZ}
     env_file:
       - .env
     volumes:

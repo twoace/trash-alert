@@ -20,14 +20,21 @@ def rgb_to_xy(rgb_color):
     return x / (x + y + z), y / (x + y + z)
 
 
-def map_title_to_color(event_title):
-    mapping = {
-        "Biotonne": (0, 255, 0),
-        "Restmülltonne": (255, 0, 0),
-        "Altpapier": (0, 0, 255),
-        "Gelbe Säcke": (255, 255, 0)
-    }
-    return mapping.get(event_title, (255, 255, 255))
+def map_title_to_color(event_title, mapping):
+    mapping = mapping
+    try:
+        if mapping:
+            mapping_dict = json.loads(mapping)
+            color = tuple(mapping_dict.get(event_title))
+            if color:
+                return color
+            else:
+                raise ValueError(f"Event Titel nicht gefunden: {event_title}")
+
+        else:
+            raise ValueError("TITLE_COLOR_MAPPING in env Datei nicht korrekt definiert")
+    except Exception as e:
+        logger.error(f"Fehler: {str(e)}")
 
 
 class HueBridgeConnection:
@@ -100,10 +107,11 @@ class HueBridgeConnection:
             self.connect()
         return self.bridge
 
-    def set_hue_color(self, light_name, rgb_color):
+    def set_hue_color(self, light_name, rgb_color, brightness):
         """
         Setzt die Farbe einer Hue-Lampe auf eine RGB-Farbe.
 
+        :param brightness: Helligkeit der Lampe
         :param light_name: Name der Lampe, die gesteuert werden soll
         :param rgb_color: Tuple (R, G, B) mit Farbwerten (0–255)
         """
@@ -128,6 +136,8 @@ class HueBridgeConnection:
                 xy_color = rgb_to_xy(rgb_color)
                 light.on = True
                 light.xy = xy_color
+                light.bri = brightness
+
                 logger.info(f"Die Lampe '{light_name}' wurde auf die Farbe rgb={rgb_color} xy={xy_color} gesetzt.")
 
         except Exception as e:

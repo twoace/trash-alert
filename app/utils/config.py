@@ -13,6 +13,10 @@ class Config:
     LIGHT_NAME = os.getenv("LIGHT_NAME")
     LOG_LEVEL = os.getenv("LOG_LEVEL")
     CALENDAR_NAME = os.getenv("CALENDAR_NAME")
+    TITLE_COLOR_MAPPING = os.getenv("TITLE_COLOR_MAPPING")
+    BRIGHTNESS = int(os.getenv("BRIGHTNESS"))
+    CALENDAR_CHECK_INTERVAL = int(os.getenv("CALENDAR_CHECK_INTERVAL"))
+    TZ = os.getenv("TZ")
 
 
 config = Config()

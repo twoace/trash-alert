@@ -29,17 +29,17 @@ def main():
             for event in events:
                 # Parse des Ereignisses in ein Python-Datetime-Objekt
                 event_title = event.get("title")
-                iteration_start_time = event.get("start")
+                start_time = event.get("start")
                 end_time = event.get("end")
 
                 # Überspringen, wenn Zeiten fehlen
-                if not iteration_start_time or not end_time:
+                if not start_time or not end_time:
                     logger.warn("Keine Start und/oder Endzeit im Ereignis! Überspringe zum nächsten Ereignis...")
                     continue
 
-                # Zeitfenster: 12 Stunden vor Start bis Ende des Ereignisses
-                light_start = iteration_start_time - timedelta(hours=12)
-                light_end = end_time
+                # Zeitfenster: X Stunden vor Start bis Ende des Ereignisses
+                light_start = start_time - timedelta(hours=config.OFFSET)
+                light_end = end_time - timedelta(hours=config.OFFSET)
 
                 # Prüfen, ob die aktuelle Zeit im Zeitfenster liegt
                 if light_start <= now <= light_end:
@@ -57,7 +57,7 @@ def main():
                     color_cycle = cycle(active_colors)
                     current_color = next(color_cycle)
 
-                    # Leuchtet für die nächsten x Minuten
+                    # Leuchtet für die nächsten 5 Minuten
                     for _ in range(60):
                         next_color = next(color_cycle)
                         hue_connection.transition_lights(

@@ -17,6 +17,7 @@ class Config:
     BRIGHTNESS = int(os.getenv("BRIGHTNESS"))
     CALENDAR_CHECK_INTERVAL = int(os.getenv("CALENDAR_CHECK_INTERVAL"))
     TZ = os.getenv("TZ")
+    OFFSET = int(os.getenv("OFFSET"))
 
 
 config = Config()

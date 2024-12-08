@@ -1,6 +1,6 @@
 # Trash Alert with Philips Hue Integration
 
-Dieses Projekt ermöglicht es, eine Philips Hue-Lampe basierend auf Kalenderereignissen zu steuern. Die Lampe zeigt eine Farbe, die mit bestimmten Ereignistiteln in Ihrem Kalender verknüpft ist. Wenn mehrere Ereignisse gleichzeitig aktiv sind, wechselt die Lampe sanft zwischen den zugehörigen Farben.
+Dieses Projekt ermöglicht es, eine Philips Hue-Lampe basierend auf Kalenderereignissen zu steuern. Die Lampe zeigt eine Farbe, die mit bestimmten Ereignistiteln im Kalender verknüpft ist. Wenn mehrere Ereignisse gleichzeitig aktiv sind, wechselt die Lampe sanft zwischen den zugehörigen Farben.
 
 ## Funktionen
 
@@ -40,6 +40,7 @@ CALDAV_USERNAME=example_user@example.com
 CALDAV_PASSWORD=example_password
 CALENDAR_NAME=ExampleCalendar
 CALENDAR_CHECK_INTERVAL=10
+OFFSET=12
 
 TITLE_COLOR_MAPPING='{
     "Biotonne": [0,255,0],
@@ -53,19 +54,20 @@ LOG_LEVEL=INFO
 
 ### Variablenbeschreibung
 
-| Variable                  | Beschreibung                                              | Beispielwert              |
-|---------------------------|----------------------------------------------------------|---------------------------|
-| `HUE_BRIDGE_IP`           | IP-Adresse Ihrer Philips Hue-Bridge                      | `192.168.x.x`             |
-| `LIGHT_NAME`              | Name der Lampe, die gesteuert wird                       | `ExampleLight`            |
-| `BRIGHTNESS`              | Helligkeit der Lampe (0–254)                             | `150`                     |
-| `CALDAV_URL`              | URL Ihres CalDAV-kompatiblen Kalenders                  | `https://caldav.example.com` |
-| `CALDAV_USERNAME`         | Benutzername für den Kalender                            | `example_user@example.com` |
-| `CALDAV_PASSWORD`         | Passwort für den Kalender                                | `example_password`        |
-| `CALENDAR_NAME`           | Name des Kalenders                                       | `ExampleCalendar`         |
-| `CALENDAR_CHECK_INTERVAL` | Prüfintervall in Minuten                                 | `10`                      |
-| `TITLE_COLOR_MAPPING`     | JSON-Zuordnung von Ereignistiteln zu Farben              | Siehe `.env`-Beispiel.    |
-| `TZ`                      | Zeitzone für die lokale Zeit                             | `Europe/Berlin`           |
-| `LOG_LEVEL`               | Log-Level (DEBUG, INFO, WARNING, ERROR)                 | `INFO`                    |
+| Variable                  | Beschreibung                                | Beispielwert                 |
+|---------------------------|---------------------------------------------|------------------------------|
+| `HUE_BRIDGE_IP`           | IP-Adresse Ihrer Philips Hue-Bridge         | `192.168.x.x`                |
+| `LIGHT_NAME`              | Name der Lampe, die gesteuert wird          | `ExampleLight`               |
+| `BRIGHTNESS`              | Helligkeit der Lampe (0–254)                | `150`                        |
+| `CALDAV_URL`              | URL Ihres CalDAV-kompatiblen Kalenders      | `https://caldav.example.com` |
+| `CALDAV_USERNAME`         | Benutzername für den Kalender               | `example_user@example.com`   |
+| `CALDAV_PASSWORD`         | Passwort für den Kalender                   | `example_password`           |
+| `CALENDAR_NAME`           | Name des Kalenders                          | `ExampleCalendar`            |
+| `CALENDAR_CHECK_INTERVAL` | Prüfintervall in Minuten                    | `10`                         |
+| `OFFSET`                  | Zeitlicher Abstand vor dem Ereignis in Std  | `12`                         |
+| `TITLE_COLOR_MAPPING`     | JSON-Zuordnung von Ereignistiteln zu Farben | Siehe `.env`-Beispiel.       |
+| `TZ`                      | Zeitzone für die lokale Zeit                | `Europe/Berlin`              |
+| `LOG_LEVEL`               | Log-Level (DEBUG, INFO, WARNING, ERROR)     | `INFO`                       |
 
 ---
 

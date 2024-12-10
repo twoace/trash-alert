@@ -3,7 +3,7 @@ from caldav import DAVClient
 from .logging import logger
 
 
-def fetch_calendar_events(client_url, username, password, calendar_name):
+def fetch_calendar_events(client_url, username, password, calendar_name, datetime_now):
     try:
         logger.info("Verbindung zum CalDAV-Server wird hergestellt...")
         client = DAVClient(client_url, username=username, password=password)
@@ -29,7 +29,7 @@ def fetch_calendar_events(client_url, username, password, calendar_name):
             logger.info(f"Kein Kalendername angegeben. Standardmäßig wird '{calendar.name}' verwendet.")
 
         # Zeitbereich für die Abfrage
-        start = datetime.now()
+        start = datetime_now
         end = start + timedelta(days=1)
         logger.info(f"Ereignisse werden für den Zeitraum {start} bis {end} abgerufen...")
 

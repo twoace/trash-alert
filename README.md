@@ -2,6 +2,8 @@
 
 Dieses Projekt ermöglicht es, eine Philips Hue-Lampe basierend auf Kalenderereignissen zu steuern. Die Lampe zeigt eine Farbe, die mit bestimmten Ereignistiteln im Kalender verknüpft ist. Wenn mehrere Ereignisse gleichzeitig aktiv sind, wechselt die Lampe sanft zwischen den zugehörigen Farben.
 
+Ich nutze dieses Projekt als Docker Container auf meinem Raspberry Pi, um mich an Müllabholungen zu erinnern. Dafür trage ich für jeden Abholungstag die entsprechenden Ereignisse in meinen Kalender ein. Am Abend vor einer geplanten Abholung zeigt die Lampe automatisch die definierte Farbe für den Abfalltyp (z. B. Gelb für Plastikmüll, Grün für Bioabfall, Blau für Papier). Dadurch vergesse ich nicht mehr, die Mülltonnen rechtzeitig rauszustellen, und profitiere von einer automatisierten und praktischen Lösung im Alltag.
+
 ## Funktionen
 
 - **Kalenderintegration (CalDAV):**
@@ -78,13 +80,14 @@ LOG_LEVEL=INFO
 1. **Image erstellen:**
    ```bash
    docker compose build
-   ```
-2. **Container starten:**
+   ```                
+2. **.env-Datei verwenden:**
+Stelle sicher, dass die .env-Datei im selben Verzeichnis wie die compose.yaml liegt.
+3. **Container starten:**
    ```bash
    docker compose up -d
    ```
-3. **.env-Datei verwenden:**
-Stelle sicher, dass die .env-Datei im selben Verzeichnis wie die docker-compose.yaml liegt.
+
 
 #### Mit Docker Pull und .env-Datei
 1. **Image von Docker Hub ziehen:**

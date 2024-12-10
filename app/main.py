@@ -12,17 +12,18 @@ def main():
     while True:
         iteration_start_time = time.time()
         try:
+            # Aktuelle Zeit
+            local_tz = pytz.timezone(config.TZ)
+            datetime_now = datetime.now(local_tz)
+
             # Lade Kalenderereignisse
             events = fetch_calendar_events(
                 config.CALDAV_URL,
                 config.CALDAV_USERNAME,
                 config.CALDAV_PASSWORD,
-                config.CALENDAR_NAME
+                config.CALENDAR_NAME,
+                datetime_now
             )
-
-            # Aktuelle Zeit
-            local_tz = pytz.timezone(config.TZ)
-            now = datetime.now(local_tz)
 
             # Ereignis prüfen, ob es im gewünschten Zeitfenster liegt
             active_colors = []
@@ -42,7 +43,7 @@ def main():
                 light_end = end_time - timedelta(hours=config.OFFSET)
 
                 # Prüfen, ob die aktuelle Zeit im Zeitfenster liegt
-                if light_start <= now <= light_end:
+                if light_start <= datetime_now <= light_end:
                     color = map_title_to_color(event_title, config.TITLE_COLOR_MAPPING)
                     active_colors.append(color)
 
